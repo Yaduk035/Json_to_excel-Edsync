@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const xlsx = require('xlsx');
 const { format, parse } = require('date-fns');
+const bodyParser = require('body-parser');
 
 function convertDate(inputDate) {
   if (!inputDate) return '';
@@ -11,7 +12,7 @@ function convertDate(inputDate) {
   const outputFormat = 'dd/MM/yyyy';
   const parsedDate = parse(inputDate, inputFormat, new Date());
 
-  console.log(parsedDate, 'parsed date');
+  // console.log(parsedDate, 'parsed date');
 
   const formattedDate = format(parsedDate, outputFormat);
   return formattedDate;
@@ -20,7 +21,9 @@ function convertDate(inputDate) {
 const app = express();
 const PORT = 4001;
 
-app.use(express.json());
+// app.use(express.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const fileDir = path.join(__dirname, 'files');
 if (!fs.existsSync(fileDir)) {
